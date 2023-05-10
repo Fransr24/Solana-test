@@ -11,10 +11,11 @@ import { programId } from './constants';
 const connection = new web3.Connection('http://localhost:8899');
 
 async function main() {
-  let counterKeypair = await createCounter(connection, programId);
+  //let counterKeypair = await createCounter(connection, programId);
+  let counterAddress = new web3.PublicKey('Cf77Zyz4xpFrYY12jJDdHBo5ZZEdRbbdYtwvWFXQ9LoB');
   let amount = 3;
-  await increase(counterKeypair.publicKey, connection, amount);
-  console.log(await getCounter(counterKeypair.publicKey, connection));
+  await increase(counterAddress, connection, amount);
+  console.log(await getCounter(counterAddress, connection));
 }
 //Esto no lo entiendo
 main()
