@@ -18,7 +18,7 @@ export const createCounter = async (
     lamports: 10000000,
     newAccountPubkey: keypair.publicKey,
     programId: ownerId,
-    space: 8,
+    space: 4,
   });
 
   let tx = new web3.Transaction().add(ix);

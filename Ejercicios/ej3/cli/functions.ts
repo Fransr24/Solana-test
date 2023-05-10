@@ -2,7 +2,7 @@ import * as web3 from '@solana/web3.js';
 import { Buffer } from 'buffer';
 import { programId, SIGNER } from './constants';
 import * as utils from './utils';
-import { Contador } from './types';
+import { Counter } from './types';
 
 export const createCounter = async (
   connection: web3.Connection,
@@ -18,7 +18,7 @@ export const createCounter = async (
     lamports: 10000000,
     newAccountPubkey: keypair.publicKey,
     programId: ownerId,
-    space: 8,
+    space: 4,
   });
 
   let tx = new web3.Transaction().add(ix);
@@ -32,18 +32,22 @@ export const increase = async (
   counterAddress: web3.PublicKey,
   connection: web3.Connection,
   amount: number,
-  signer: web3.Keypair = SIGNER,
+  signer: web3.Keypair = SIGNER
 ) => {
   let instructionNumber = 0;
 
   let dataBuffer = Buffer.from('');
   dataBuffer = utils.packUInt8(dataBuffer, instructionNumber);
   dataBuffer = utils.packUInt8(dataBuffer, amount);
+
+//Creo la instruccion con una unica cuenta a mandar que va a ser la creada, no es signer
   const instruction = new web3.TransactionInstruction({
     programId,
     keys: [{ pubkey: counterAddress, isSigner: false, isWritable: true }],
     data: dataBuffer,
   });
+//confirmo transaccion con signer que es la misma de CreateAccount
+//Await: espera a que la transaccion sea confirmada por la blockchain de solana para retornar
   let txReceipt = await web3.sendAndConfirmTransaction(
     connection,
     new web3.Transaction().add(instruction),
@@ -73,6 +77,6 @@ export const getCounter = async (
   console.log('COUNTER Owner: ', counterInfo?.owner.toBase58());
   console.log('Number: ', data.readUint32LE());
 
-  let counterStruct = Contador.decode(data);
+  let counterStruct = Counter.decode(data);
   return counterStruct;
 };

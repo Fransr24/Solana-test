@@ -11,7 +11,7 @@ use solana_program::{
     system_instruction::create_account,
 };
 
-use crate::{instruction::ContadorInstruction, state::Counter};
+use crate::{instruction::ContadorInstruction, state::Counter, error::Errores};
 
 pub struct Processor;
 impl Processor
@@ -31,24 +31,27 @@ impl Processor
         let account_info_iter = &mut accounts.iter();
         let counter_acc = next_account_info(account_info_iter)?; //Cuenta contador
         let signer = next_account_info(account_info_iter)?;//Cuenta signer
+        let system_program = next_account_info(account_info_iter)?;//Cuenta signer
         if !signer.is_signer {
             return Err(ProgramError::MissingRequiredSignature);
         }
-        let (pda, _bump_seed) = Pubkey::find_program_address(&[b"escrow"], program_id);
+        let (pda, _bump_seed) = Pubkey::find_program_address(&[b"counter"], program_id);
         //Verificacion para ver si es la misma direccion
         if pda != *counter_acc.key{
-            return Err(ProgramError::InvalidAccountData);
+            return Err(Errores::NotExpectedAddress.into());
         }
         //Como verifico si una cuenta esta inicializada o no? veo si el owner es el systemProgram y sus lamports son 0
         if counter_acc.lamports() == 0
         && *counter_acc.owner == solana_program::system_program::id()
         {
+            
             let space = Counter::LEN;
             let rent = Rent::get()?; //obtengo datos de Rent, como hacer los calculos y eso para la siguiente linea
             let rent_lamports = rent.minimum_balance(space);
             //rent_lamports debo buscar lamports minimos para la renta, ni idea
             //Ahora debo llamar a la funcion Invoke_signed para mandar la transaccion al program que se envió por parametro (el que tiene el ownership de counter)
             //La transaccion será que cree una cuenta a su nombre con las seeds de la pda
+
             invoke_signed(
                 //creo cuenta con el signer (para que firme la transaccion), counter 
                 &create_account(
@@ -62,6 +65,7 @@ impl Processor
                 &[&[b"counter", &[_bump_seed]]], //Signer para la transaccion de invoke_signed
             )?;
         }
+
         let mut counter_data = Counter::unpack_unchecked(&counter_acc.try_borrow_data()?)?; //obtengo el dato del contador
 
         //Llamo a la función, no me interesa el contenido de la instriccion ni nada mas ya que con saber que la instruccion es 0, aumento el contador

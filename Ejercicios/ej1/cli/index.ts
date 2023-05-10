@@ -5,15 +5,15 @@ import {
   increase,
   createCounter,
 } from './functions';
+import { programId } from './constants';
 
 //const connection = new web3.Connection('http://127.0.0.1:8899');
 const connection = new web3.Connection('http://localhost:8899');
 
 async function main() {
-  let programId = new web3.PublicKey('');
-  let counterKeypair = await createCounter(connection, programId);
+//  let counterKeypair = await createCounter(connection, programId);
 
-  let counterAddress = counterKeypair.publicKey
+  let counterAddress = new web3.PublicKey('Fm4wkL9htsYBHwknY1fhjXn8X3QoP2DY6P25f78kqXeB');
   await increase(counterAddress, connection);
   console.log(await getCounter(counterAddress, connection));
 }

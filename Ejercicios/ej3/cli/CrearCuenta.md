@@ -22,3 +22,13 @@ El retorno de toda esta funcion de la cuenta va a ser el keypair de la cuenta cr
 Ahora llamo a increase que se va a encargar de hacer la transaccion de la instruccion de contador, esa funcion recibe la public key de la nueva cuenta creada y conection
 retorna transaction signature, que representa la firma de la transaccion y en caso de error, va a retornar ese error
 Y finalmente llamo a la funcion GetCounter, en donde me imprime datos relevantes de la cuenta e imprimo lo que retorna GetCounter (que es su data)
+
+solana-test-validator -r --url localhost
+solana program deploy target/deploy/ej1.so --url localhost
+
+DESPUES DE PROGRAM DEPLOY LLENO LOS PARAMETROS QUE ME PIDE EN CONSTANTS.TS (PUBLIC KEY)
+me meto en el cliente y hago npx ts-node index.ts
+
+PARA VER INFO DE UNA CUENTA: solana account (direccion de acc) --url localhost
+
+EJECUTAR EL PROGRAMA DE VERDAD:

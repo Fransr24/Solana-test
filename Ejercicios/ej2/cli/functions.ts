@@ -20,11 +20,13 @@ export const increase = async (
     programId,
     keys: [{ pubkey: counterAddress, isSigner: false, isWritable: true },
           { pubkey: signer.publicKey, isSigner: true, isWritable: true },
+          { pubkey: web3.SystemProgram.programId, isSigner: false, isWritable: false,}
     ],
     data: dataBuffer,
   });
 //confirmo transaccion con signer que es la misma de CreateAccount
 //Await: espera a que la transaccion sea confirmada por la blockchain de solana para retornar
+console.log('sending Transaction');
   let txReceipt = await web3.sendAndConfirmTransaction(
     connection,
     new web3.Transaction().add(instruction),

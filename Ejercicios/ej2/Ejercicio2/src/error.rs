@@ -6,6 +6,9 @@ pub enum Errores {
     /// Invalid instruction
     #[error("Invalid Instruction")]
     InvalidInstruction,
+    // Not expected Adress
+    #[error("The pda Adress is not the expected")]
+    NotExpectedAddress,
     
 }
 //Convierto EscrowError a ProgramError, porque el entrypoint retorna un result de tipo ProgramError 

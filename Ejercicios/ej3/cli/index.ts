@@ -5,19 +5,16 @@ import {
   increase,
   createCounter,
 } from './functions';
+import { programId } from './constants';
 
 //const connection = new web3.Connection('http://127.0.0.1:8899');
 const connection = new web3.Connection('http://localhost:8899');
 
 async function main() {
-  let programId = new web3.PublicKey('');
   let counterKeypair = await createCounter(connection, programId);
-
-  let cantidad = 3;
-  let counterAddress = counterKeypair.publicKey
-  await increase(counterAddress, connection, cantidad);
-  console.log(await getCounter(counterAddress, connection));
-  console.log('Counter Increase: ', cantidad);
+  let amount = 3;
+  await increase(counterKeypair.publicKey, connection, amount);
+  console.log(await getCounter(counterKeypair.publicKey, connection));
 }
 //Esto no lo entiendo
 main()

@@ -7,6 +7,7 @@ pub enum ContadorInstruction
     // Accounts expected: 
     //0. Cuenta pda donde se guarda el contador se debe poder escribir en ella para aumentarlo
     //1. Cuenta signer donde se firma la transaccion [signer]
+    //2. System program (si no lo envio tengo error al crear cuenta)
     Aumentar{},
 }
 

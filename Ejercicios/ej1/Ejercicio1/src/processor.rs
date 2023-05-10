@@ -21,12 +21,10 @@ impl Processor
             }
         }
     }
-    fn process_increase(accounts: &[AccountInfo], program_id: &Pubkey,) -> ProgramResult
+    fn process_increase(accounts: &[AccountInfo], _program_id: &Pubkey,) -> ProgramResult
     {
         let account_info_iter = &mut accounts.iter();
         let counter_acc = next_account_info(account_info_iter)?; //Cuenta contador
-        if counter_acc.owner == program_id //El ownership de la account que tiene el contador debe ser el programa que se envió por la transaccion
-        {
             let mut counter_data = Counter::unpack_unchecked(&counter_acc.try_borrow_data()?)?; //obtengo el dato del contador
 
             //Llamo a la función, no me interesa el contenido de la instriccion ni nada mas ya que con saber que la instruccion es 0, aumento el contador
@@ -36,7 +34,6 @@ impl Processor
             //Devuelvo el dato
             Counter::pack(counter_data,&mut counter_acc.try_borrow_mut_data()?,
         )?;
-        }
         Ok(())
     }
 }
